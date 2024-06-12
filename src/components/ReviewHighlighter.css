@@ -1,0 +1,28 @@
+.review {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .highlight {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .highlight[data-sentiment="Positive"] {
+    background-color: #D9F2DD;
+  }
+  
+  .highlight[data-sentiment="Negative"] {
+    background-color: #F2DBD9;
+  }
+  
+  .highlight[data-sentiment="Mixed"] {
+    background-color: #e8bd6d3d;
+  }
+  
+  .highlight[data-sentiment="Neutral"] {
+    background-color: #eaf09b6b;
+  }
+  
