@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import Tooltip from "./Tooltip";
 import "../styles/ReviewHighlighter.css";
 
@@ -17,7 +18,15 @@ const getSentimentColor = (sentiment) => {
 };
 
 const ReviewHighlighter = ({ review }) => {
-  const { content, analytics, reviewer_name, source, date, rating } = review;
+  const {
+    content,
+    analytics,
+    reviewer_name,
+    source,
+    date,
+    rating,
+    review_url,
+  } = review;
 
   const getHighlightedText = () => {
     let parts = [];
@@ -76,21 +85,51 @@ const ReviewHighlighter = ({ review }) => {
             className="reviewer-pic"
           />
           <div>
-            <div className="reviewer-name">{reviewer_name}</div>
-            <div className="review-date">{date}</div>
+            <div className="reviewer-name">
+              {reviewer_name}{" "}
+              <small style={{ color: "#989898" }}>wrote a review at</small>{" "}
+              <a href={review_url} target="_blank" rel="noopener noreferrer">
+                {source.name}
+              </a>
+            </div>
           </div>
         </div>
-        <div className="review-actions">
-          <button className="review-action delete">Delete</button>
-          <button className="review-action reply">Reply</button>
+      </div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div className="review-rating">{renderStars()}</div>
+        <div className="review-date">
+          <time dateTime={new Date(date).toISOString()}>{date}</time>
         </div>
       </div>
-      <div className="review-rating">{renderStars()}</div>
       <div className="review-content">
         <p>{getHighlightedText()}</p>
       </div>
     </div>
   );
+};
+
+ReviewHighlighter.propTypes = {
+  review: PropTypes.shape({
+    content: PropTypes.string.isRequired,
+    analytics: PropTypes.arrayOf(
+      PropTypes.shape({
+        highlight_indices: PropTypes.arrayOf(
+          PropTypes.arrayOf(
+            PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+          )
+        ).isRequired,
+        topic: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    reviewer_name: PropTypes.string.isRequired,
+    source: PropTypes.shape({
+      icon: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    date: PropTypes.string.isRequired,
+    rating: PropTypes.number.isRequired,
+    review_url: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ReviewHighlighter;
