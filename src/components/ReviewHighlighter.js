@@ -1,6 +1,5 @@
-import React from "react";
 import Tooltip from "./Tooltip";
-import "./ReviewHighlighter.css";
+import "../styles/ReviewHighlighter.css";
 
 const getSentimentColor = (sentiment) => {
   switch (sentiment) {
@@ -9,16 +8,16 @@ const getSentimentColor = (sentiment) => {
     case "Negative":
       return "#F2DBD9";
     case "Mixed":
-      return "#e8bd6d3d";
+      return "#F2E6D9";
     case "Neutral":
-      return "#eaf09b6b";
+      return "#F2F1D9";
     default:
       return "transparent";
   }
 };
 
 const ReviewHighlighter = ({ review }) => {
-  const { content, analytics } = review;
+  const { content, analytics, reviewer_name, source, date, rating } = review;
 
   const getHighlightedText = () => {
     let parts = [];
@@ -55,11 +54,41 @@ const ReviewHighlighter = ({ review }) => {
     return parts;
   };
 
+  const renderStars = () => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span key={i} className={`star ${i <= rating ? "filled" : ""}`}>
+          ★
+        </span>
+      );
+    }
+    return stars;
+  };
+
   return (
     <div className="review">
-      <h4>{review.reviewer_name}</h4>
-      <p>{getHighlightedText()}</p>
-      <small>{review.date}</small>
+      <div className="review-header">
+        <div className="reviewer-info">
+          <img
+            src={source.icon}
+            alt={`${reviewer_name}'s profile`}
+            className="reviewer-pic"
+          />
+          <div>
+            <div className="reviewer-name">{reviewer_name}</div>
+            <div className="review-date">{date}</div>
+          </div>
+        </div>
+        <div className="review-actions">
+          <button className="review-action delete">Delete</button>
+          <button className="review-action reply">Reply</button>
+        </div>
+      </div>
+      <div className="review-rating">{renderStars()}</div>
+      <div className="review-content">
+        <p>{getHighlightedText()}</p>
+      </div>
     </div>
   );
 };
