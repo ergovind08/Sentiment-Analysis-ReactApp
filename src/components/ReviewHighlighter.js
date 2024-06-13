@@ -1,21 +1,18 @@
+import React from "react";
 import PropTypes from "prop-types";
 import Tooltip from "./Tooltip";
 import "../styles/ReviewHighlighter.css";
 
-const getSentimentColor = (sentiment) => {
-  switch (sentiment) {
-    case "Positive":
-      return "#D9F2DD";
-    case "Negative":
-      return "#F2DBD9";
-    case "Mixed":
-      return "#F2E6D9";
-    case "Neutral":
-      return "#F2F1D9";
-    default:
-      return "transparent";
-  }
+const SENTIMENT_COLORS = {
+  Positive: "#D9F2DD",
+  Negative: "#F2DBD9",
+  Mixed: "#F2E6D9",
+  Neutral: "#F2F1D9",
+  default: "transparent",
 };
+
+const getSentimentColor = (sentiment) =>
+  SENTIMENT_COLORS[sentiment] || SENTIMENT_COLORS.default;
 
 const ReviewHighlighter = ({ review }) => {
   const {
@@ -24,8 +21,9 @@ const ReviewHighlighter = ({ review }) => {
     reviewer_name,
     source,
     date,
-    rating,
     review_url,
+    rating_review_score,
+    out_of,
   } = review;
 
   const getHighlightedText = () => {
@@ -65,9 +63,15 @@ const ReviewHighlighter = ({ review }) => {
 
   const renderStars = () => {
     const stars = [];
+    const filledStars = Math.round((rating_review_score / out_of) * 5);
+
     for (let i = 1; i <= 5; i++) {
       stars.push(
-        <span key={i} className={`star ${i <= rating ? "filled" : ""}`}>
+        <span
+          key={i}
+          className={`star ${i <= filledStars ? "filled" : ""}`}
+          style={{ color: i <= filledStars ? "#FEBE10" : "gray" }}
+        >
           ★
         </span>
       );
@@ -76,8 +80,8 @@ const ReviewHighlighter = ({ review }) => {
   };
 
   return (
-    <div className="review">
-      <div className="review-header">
+    <article className="review">
+      <header className="review-header">
         <div className="reviewer-info">
           <img
             src={source.icon}
@@ -85,26 +89,29 @@ const ReviewHighlighter = ({ review }) => {
             className="reviewer-pic"
           />
           <div>
-            <div className="reviewer-name">
-              {reviewer_name}{" "}
-              <small style={{ color: "#989898" }}>wrote a review at</small>{" "}
+            <h4 className="reviewer-name">
+              {reviewer_name}
+              <small style={{ color: "#989898" }}> wrote a review at </small>
               <a href={review_url} target="_blank" rel="noopener noreferrer">
                 {source.name}
               </a>
-            </div>
+            </h4>
           </div>
         </div>
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
+      </header>
+      <section
+        className="review-details"
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <div className="review-rating">{renderStars()}</div>
-        <div className="review-date">
-          <time dateTime={new Date(date).toISOString()}>{date}</time>
-        </div>
-      </div>
-      <div className="review-content">
+        <time className="review-date" dateTime={new Date(date).toISOString()}>
+          {date}
+        </time>
+      </section>
+      <section className="review-content">
         <p>{getHighlightedText()}</p>
-      </div>
-    </div>
+      </section>
+    </article>
   );
 };
 
@@ -127,8 +134,9 @@ ReviewHighlighter.propTypes = {
       name: PropTypes.string.isRequired,
     }).isRequired,
     date: PropTypes.string.isRequired,
-    rating: PropTypes.number.isRequired,
     review_url: PropTypes.string.isRequired,
+    rating_review_score: PropTypes.number.isRequired,
+    out_of: PropTypes.number.isRequired,
   }).isRequired,
 };
 
