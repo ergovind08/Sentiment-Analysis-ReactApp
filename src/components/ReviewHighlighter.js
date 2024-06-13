@@ -1,7 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { FaRegBookmark, FaEllipsisV } from "react-icons/fa";
+import { MdOutlinePersonAddAlt1 } from "react-icons/md";
 import Tooltip from "./Tooltip";
 import "../styles/ReviewHighlighter.css";
+import { CiMenuKebab } from "react-icons/ci";
 
 const SENTIMENT_COLORS = {
   Positive: "#D9F2DD",
@@ -97,6 +100,14 @@ const ReviewHighlighter = ({ review }) => {
               </a>
             </h4>
           </div>
+        </div>
+        <div className="review-icons">
+          <MdOutlinePersonAddAlt1 size={24} style={{ margin: "0 5px" }} />
+          <FaRegBookmark size={24} style={{ margin: "0 5px" }} />
+          <CiMenuKebab
+            size={24}
+            style={{ margin: "0 5px", transform: "rotate(90deg)" }}
+          />{" "}
         </div>
       </header>
       <section

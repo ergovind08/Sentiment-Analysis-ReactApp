@@ -5,7 +5,7 @@ import "./App.css";
 function App() {
   return (
     <div className="App">
-      <h1>Reviews</h1>
+      <h1 style={{ color: "gray" }}>Reviews</h1>
       <ReviewList />
     </div>
   );
